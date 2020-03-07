@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: zuul
+  cloud:
+    config:
+      override-none: true
+    
+server:
+  port: 3001
+  
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka1:2001/eureka, http://eureka2:2002/eureka
+#代理转发的路由规则,下面的配置是默认路由规则
+#默认zuul有配置,可以向eureka中获取注册信息,但是配置出来比较好
+zuul:
+  routes:
+    item-service: /item-service/**
+    user-service: /user-service/**
+    order-service: /order-service/**
+  #zuul默认不启用重试,可以用下面配置开启
+  retryable: true 
+  
+  #配置ribbon参数,可以不配
+ribbon:
+  ConnectTimeout: 1000
+  ReadTimeout: 1000
+  MaxAutoRetriesNextServer: 1
+  MaxAutoRetries: 1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
